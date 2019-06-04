@@ -50,3 +50,42 @@ def trapezium_rule(function, a, b, n):
         return -integral
     else:
         return integral
+
+
+def simpsons_rule(function, a, b, n):
+    if n == 0:
+        error('n cannot be 0')
+        raise DivisionByZero
+    invert = False
+    if a > b:
+        invert = True
+        a, b = b, a
+    h = Decimal(b - a) / n
+    y_values = []
+    for i in range(0, n):
+        y = function(a + i * h)
+        y_values.append(y)
+    y_0, y_n = 0, 0
+    try:
+        y_0 = y_values.pop(0)
+    except IndexError:
+        pass
+    try:
+        y_n = y_values.pop(-1)
+    except IndexError:
+        pass
+    odd_index, even_index = [], []
+    for i in range(len(y_values)):
+        if i % 2 + 1 == 1:  # since y_0 has been removed the firs item is y_1 is odd
+            odd_index.append(y_values[i])
+        else:
+            even_index.append(y_values[i])
+    integral = y_0 + y_n
+    integral += 4 * sum(odd_index)
+    integral += 2 * sum(even_index)
+    integral *= Decimal(1 / 3)
+    integral *= h
+    if invert:
+        return -integral
+    else:
+        return integral
