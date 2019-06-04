@@ -2,6 +2,7 @@
 This is a collection of integration related functions
 """
 from decimal import *
+from error import *
 
 getcontext().rounding = ROUND_HALF_UP
 getcontext().prec = 64
@@ -19,9 +20,16 @@ def trapezium_rule(function, a, b, n):
     :param n: int
     :return: Decimal
     """
+    if n == 0:
+        error('n cannot be 0')
+        raise DivisionByZero
+    # If a > b then calculate -∫_b^a y dx
+    invert = False
+    if a > b:
+        a, b = b, a
+        invert = True
     h = Decimal(b - a) / n
     y_values = []
-    x = a
     for i in range(0, n):
         y = function(a + i * h)
         y_values.append(y)
@@ -38,4 +46,7 @@ def trapezium_rule(function, a, b, n):
     integral += 2 * sum(y_values)
     integral *= Decimal(1 / 2)
     integral *= h
-    return integral
+    if invert:
+        return -integral
+    else:
+        return integral
