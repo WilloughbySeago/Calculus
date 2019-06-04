@@ -3,7 +3,6 @@ This is a collection of functions related to differentiation
 """
 from decimal import *
 from error import *
-import math
 
 getcontext().rounding = ROUND_HALF_UP
 getcontext().prec = 64
@@ -84,4 +83,3 @@ def newton_raphson(function, d_function=None, x_0=0, repeats=100, count=0, decim
             count += 1
             return newton_raphson(function, None, x_1, repeats, count)
     return round(x_1, decimal_places)
-
