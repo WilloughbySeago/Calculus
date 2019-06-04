@@ -8,19 +8,46 @@ getcontext().rounding = ROUND_HALF_UP
 getcontext().prec = 64
 
 
-def derivative(function, x, h=Decimal(0.000000000000000100000000)):
+def derivative1(function, x, h=Decimal(0.000000000000000100000000), decimal_places=10):
     """
     This function will approximate the derivative of a single variable function using:
     dy/dx = (f(x+h) - f(x))/h
+    which is less accurate than the derivative2 method as this has first order errors
     :param function: function (1 argument)
     :param x: int, float, Decimal
     :param h: int, float, Decimal
+    :param decimal_places: int
     :return: Decimal
     """
     if h == 0:
         error('h cannot be 0')
         raise DivisionByZero
-    f_of_x = function(Decimal(x))
+    x = Decimal(x)
+    h = Decimal(h)
+    f_of_x = function(x)
     f_of_x_plus_h = function(x + h)
     dy_dx = (f_of_x_plus_h - f_of_x) / h
-    return round(dy_dx, 10)
+    return round(dy_dx, decimal_places)
+
+
+def derivative2(function, x, h=Decimal(0.000000000000000100000000), decimal_places=10):
+    """
+    This function will approximate the derivative of a single variable function using:
+    dy/dx = (f(x+h) - f(x-h))/(2h)
+    which is more accurate than the derivative1 method as in this version all errors are second order
+    :param function: function
+    :param x: int, float, Decimal
+    :param h: int, float, Decimal
+    :param decimal_places: int
+    :return: Decimal
+    """
+    if h == 0:
+        error('h cannot be 0')
+        raise DivisionByZero
+    x = Decimal(x)
+    h = Decimal(h)
+    f_of_x_plus_h = function(x + h)
+    f_of_x_minus_h = function(x - h)
+    dy_dx = (f_of_x_plus_h - f_of_x_minus_h) / (2 * h)
+    return round(dy_dx, decimal_places)
+
