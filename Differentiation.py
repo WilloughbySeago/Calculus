@@ -8,7 +8,7 @@ getcontext().rounding = ROUND_HALF_UP
 getcontext().prec = 64
 
 
-def derivative(function, x, h=Decimal(0.0000000000010000000)):
+def derivative(function, x, h=Decimal(0.000000000000000100000000)):
     """
     This function will approximate the derivative of a single variable function using:
     dy/dx = (f(x+h) - f(x))/h
