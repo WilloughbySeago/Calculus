@@ -53,12 +53,35 @@ def derivative2(function, x, h=Decimal(0.000000000000000100000000), decimal_plac
     return round(dy_dx, decimal_places)
 
 
-def newton_raphson(function, d_function, x_0, repeats, count=0):
-    try:
-        x_1 = Decimal(x_0) - Decimal(function(x_0)) / Decimal(d_function(x_0))
-    except DivisionByZero:
-        x_1 = Decimal(x_0) - Decimal(function(x_0)) / Decimal(0.0000000001)
-    while count < repeats:
-        count += 1
-        return newton_raphson(function, d_function, x_1, repeats, count)
-    return x_1
+def newton_raphson(function, d_function=None, x_0=0, repeats=100, count=0, decimal_places=10):
+    """
+    This function will apply the newton-raphson method to a function to work out x_(repeats)
+    d_function can either be a function or will use derivative2 to approximate the derivative
+    Do not change count it should always be 0 as it is only for internal use
+    :param function: function
+    :param d_function: function or None
+    :param x_0: int, float, Decimal
+    :param repeats: int
+    :param count: 0 if using function externally else int
+    :param decimal_places: int
+    :return: Decimal
+    """
+    if d_function is not None:
+        try:
+            x_1 = Decimal(x_0) - Decimal(function(x_0)) / Decimal(d_function(x_0))
+        except DivisionByZero:
+            x_1 = Decimal(x_0) - Decimal(function(x_0)) / Decimal(0.0000000001)
+        while count < repeats:
+            count += 1
+            return newton_raphson(function, d_function, x_1, repeats, count)
+    else:
+        d_function = derivative2(function, x_0)
+        try:
+            x_1 = Decimal(x_0) - Decimal(function(x_0)) / Decimal(d_function)
+        except DivisionByZero:
+            x_1 = Decimal(x_0) - Decimal(function(x_0)) / Decimal(0.0000000001)
+        while count < repeats:
+            count += 1
+            return newton_raphson(function, None, x_1, repeats, count)
+    return round(x_1, decimal_places)
+
