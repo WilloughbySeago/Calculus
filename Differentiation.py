@@ -3,6 +3,7 @@ This is a collection of functions related to differentiation
 """
 from decimal import *
 from error import *
+import math
 
 getcontext().rounding = ROUND_HALF_UP
 getcontext().prec = 64
@@ -51,3 +52,13 @@ def derivative2(function, x, h=Decimal(0.000000000000000100000000), decimal_plac
     dy_dx = (f_of_x_plus_h - f_of_x_minus_h) / (2 * h)
     return round(dy_dx, decimal_places)
 
+
+def newton_raphson(function, d_function, x_0, repeats, count=0):
+    try:
+        x_1 = Decimal(x_0) - Decimal(function(x_0)) / Decimal(d_function(x_0))
+    except DivisionByZero:
+        x_1 = Decimal(x_0) - Decimal(function(x_0)) / Decimal(0.0000000001)
+    while count < repeats:
+        count += 1
+        return newton_raphson(function, d_function, x_1, repeats, count)
+    return x_1
